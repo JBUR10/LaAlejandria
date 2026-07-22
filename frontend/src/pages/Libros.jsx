@@ -1,32 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import LibroFormulario from "../components/LibroFormulario";
 import LibroTabla from "../components/LibroTabla";
+
+import {
+    obtenerLibros,
+    crearLibro,
+    actualizarLibro,
+    eliminarLibro as borrarLibro
+} from "../services/libroService";
 
 
 function Libros() {
 
 
-    const [libros, setLibros] = useState([
-
-        {
-            id: 1,
-            titulo: "Cien años de soledad",
-            autor: "Gabriel García Márquez",
-            categoria: "Novela"
-        },
-
-        {
-            id: 2,
-            titulo: "Clean Code",
-            autor: "Robert Martin",
-            categoria: "Programación"
-        }
-
-    ]);
+    // Aquí se guardan los libros que vienen de SQLite
+    const [libros, setLibros] = useState([]);
 
 
 
+    // Aquí se guarda el libro que estamos creando o editando
     const [libro, setLibro] = useState({
 
         titulo: "",
@@ -37,46 +30,96 @@ function Libros() {
 
 
 
+    // Ejecuta la carga cuando abrimos la página
+    useEffect(() => {
+
+        cargarLibros();
+
+    }, []);
+
+
+
+
+    // Trae los libros desde Spring Boot
+    function cargarLibros() {
+
+
+        obtenerLibros()
+
+            .then(respuesta => {
+
+
+                setLibros(respuesta.data);
+
+
+            })
+
+            .catch(error => {
+
+
+                console.log(error);
+
+
+            });
+
+
+    }
+
+
+
+
+    // Guarda o actualiza un libro
     function guardarLibro() {
 
 
+
+        // Si tiene ID significa que estamos editando
         if (libro.id) {
 
 
-            setLibros(
+            actualizarLibro(libro.id, libro)
 
-                libros.map(
-
-                    item => item.id === libro.id
-                        ? libro
-                        : item
-
-                )
-
-            );
+                .then(() => {
 
 
-        } else {
+                    cargarLibros();
+
+                    limpiarFormulario();
 
 
-            const nuevo = {
+                });
 
-                ...libro,
-                id: Date.now()
-
-            };
-
-
-            setLibros([
-
-                ...libros,
-                nuevo
-
-            ]);
 
 
         }
 
+        // Si no tiene ID significa que es nuevo
+        else {
+
+
+            crearLibro(libro)
+
+                .then(() => {
+
+
+                    cargarLibros();
+
+                    limpiarFormulario();
+
+
+                });
+
+
+        }
+
+
+    }
+
+
+
+
+    // Limpia el formulario después de guardar
+    function limpiarFormulario() {
 
 
         setLibro({
@@ -92,29 +135,37 @@ function Libros() {
 
 
 
+
+    // Carga un libro dentro del formulario para editarlo
     function editarLibro(libroSeleccionado) {
+
 
         setLibro(libroSeleccionado);
 
+
     }
 
 
 
+
+
+    // Elimina un libro de la base de datos
     function eliminarLibro(id) {
 
 
-        setLibros(
+        borrarLibro(id)
 
-            libros.filter(
+            .then(() => {
 
-                libro => libro.id !== id
 
-            )
+                cargarLibros();
 
-        );
+
+            });
 
 
     }
+
 
 
 
@@ -128,6 +179,7 @@ function Libros() {
             </h1>
 
 
+
             <LibroFormulario
 
                 libro={libro}
@@ -137,6 +189,7 @@ function Libros() {
                 guardarLibro={guardarLibro}
 
             />
+
 
 
             <LibroTabla
@@ -153,6 +206,7 @@ function Libros() {
         </div>
 
     );
+
 
 }
 

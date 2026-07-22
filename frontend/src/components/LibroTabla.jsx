@@ -3,83 +3,113 @@ function LibroTabla({ libros, editarLibro, eliminarLibro }) {
 
     return (
 
-        <table className="table table-striped">
+        <div>
+
+            <h3>
+                Lista de Libros
+            </h3>
 
 
-            <thead className="table-dark">
-
-                <tr>
-
-                    <th>ID</th>
-                    <th>Título</th>
-                    <th>Autor</th>
-                    <th>Categoría</th>
-                    <th>Acciones</th>
-
-                </tr>
-
-            </thead>
+            <table className="table table-striped">
 
 
-            <tbody>
+                <thead>
+
+                    <tr>
+
+                        <th>ID</th>
+
+                        <th>Título</th>
+
+                        <th>Autor</th>
+
+                        <th>Categoría</th>
+
+                        <th>Acciones</th>
+
+                    </tr>
+
+                </thead>
 
 
-                {
-                    libros.map((libro) => (
 
-                        <tr key={libro.id}>
-
-                            <td>
-                                {libro.id}
-                            </td>
+                <tbody>
 
 
-                            <td>
-                                {libro.titulo}
-                            </td>
+                    {
+                        libros.map((libro) => (
 
 
-                            <td>
-                                {libro.autor}
-                            </td>
+                            <tr key={libro.id}>
 
 
-                            <td>
-                                {libro.categoria}
-                            </td>
+                                <td>
+                                    {libro.id}
+                                </td>
 
 
-                            <td>
-
-                                <button
-                                    className="btn btn-warning btn-sm me-2"
-                                    onClick={() => editarLibro(libro)}
-                                >
-                                    Editar
-                                </button>
+                                <td>
+                                    {libro.titulo}
+                                </td>
 
 
-                                <button
-                                    className="btn btn-danger btn-sm"
-                                    onClick={() => eliminarLibro(libro.id)}
-                                >
-                                    Eliminar
-                                </button>
+                                <td>
+                                    {libro.autor}
+                                </td>
 
 
-                            </td>
+                                <td>
+                                    {libro.categoria}
+                                </td>
 
 
-                        </tr>
-
-                    ))
-                }
+                                <td>
 
 
-            </tbody>
+                                    <button
+
+                                        className="btn btn-warning btn-sm me-2"
+
+                                        onClick={() => editarLibro(libro)}
+
+                                    >
+
+                                        Editar
+
+                                    </button>
 
 
-        </table>
+
+                                    <button
+
+                                        className="btn btn-danger btn-sm"
+
+                                        onClick={() => eliminarLibro(libro.id)}
+
+                                    >
+
+                                        Eliminar
+
+                                    </button>
+
+
+                                </td>
+
+
+                            </tr>
+
+
+                        ))
+                    }
+
+
+                </tbody>
+
+
+            </table>
+
+
+        </div>
 
     );
 
